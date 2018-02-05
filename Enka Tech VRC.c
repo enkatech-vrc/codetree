@@ -1,3 +1,5 @@
+#pragma config(Sensor, dgtl1,  mainswitch,     sensorTouch)
+#pragma config(Sensor, dgtl4,  range,          sensorSONAR_cm)
 #pragma config(Sensor, dgtl11, but1,           sensorTouch)
 #pragma config(Motor,  port1,           rightMotor,    tmotorServoContinuousRotation, openLoop, reversed)
 #pragma config(Motor,  port6,           clawM,         tmotorServoContinuousRotation, openLoop)
@@ -58,124 +60,129 @@ void pre_auton()
 
 task autonomous()
 {
-	// ..........................................................................
-	// Insert user code here.
-	// ..........................................................................
 
-	// Remove this function call once you have "real" code.
+
+
 	AutonomousCodePlaceholderForTesting();
 }
 
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                              User Control Task                            */
-/*                                                                           */
-/*  This task is used to control your robot during the user control phase of */
-/*  a VEX Competition.                                                       */
-/*                                                                           */
-/*  You must modify the code to add your own robot specific commands here.   */
-/*---------------------------------------------------------------------------*/
 
 task usercontrol()
 {
-	// User control code here, inside the loop
-while(true){
-	while (state == 1)
-	{
-
-		if(SensorValue(but1) == 1)
+	while(true){
+		
+	//Ultrasonic Sensor for autonomous
+		while(SensorValue(range)> 50 )
 		{
-			state = !state;
-		}
-		motor[leftMotor]  = -(vexRT[Ch3]);
-		motor[rightMotor] = -(vexRT[Ch2]);
-		UserControlCodePlaceholderForTesting();
-
-	//Claw Motion
-		if (vexRT[Btn6U] == 1)
-		{
-			motor[clawM] = up;
-		}
-		else if (vexRT[Btn6D] ==1)
-		{
-			motor[clawM] = dw;
-		}
-		else
-		{
-			motor[clawM] = non;
-		}
-
-
-		//Main Arm
-		if (vexRT[Btn8U] == 1)
-		{
-			motor[mainarmM] = up;
-		}
-		else if (vexRT[Btn8D] ==1)
-		{
-			motor[mainarmM] = dw;
-		}
-		else
-		{
-			motor[mainarmM] = non;
-		}
-
-
-		// Wrist Motion
-		if (vexRT[Btn8R] == 1)
-		{
-			motor[wristM] = up;
-		}
-		else if (vexRT[Btn8L] == 1)
-		{
-			motor[wristM] = dw;
-		}
-		else
-		{
-			motor[wristM] = non;
-		}
-
-		// Gripper Motion
-		if (vexRT[Btn5D] == 1)
-		{
-			motor[gripperM] = up;
-		}
-		else if (vexRT[Btn5U] ==1)
-		{
-			motor[gripperM] = dw;
-		}
-		else
-		{
-			motor[gripperM] = non;
-		}
-
-
-
-		// Super Spin
-		if (vexRT[Btn7L] == 1)
-		{
-			motor[rightMotor] = up;
-			motor[leftMotor] = dw;
-
-			delay(1100);
-		}
-		else if(vexRT[Btn7R] == 1)
-		{
-			motor[leftMotor] = up;
 			motor[rightMotor] = dw;
-			delay(1100);
+			motor[leftMotor] = dw;
 		}
-		else
+		while (state == 1)
 		{
-			motor[rightMotor] = non;
-			motor[leftMotor] = non;
-		}
-	}
-	motor[leftMotor]  = 0;
-	motor[rightMotor] = 0;
-	motor[gripperM]  = 0;
-	motor[mainarmM] = 0;
-	motor[clawM]  = 0;
-}
-}
+			
+		//Emergency button state
+			if(SensorValue(but1) == 1)
+			{
+				state = !state;
+			}
+			motor[leftMotor]  = -(vexRT[Ch3]);
+			motor[rightMotor] = -(vexRT[Ch2]);
+			UserControlCodePlaceholderForTesting();
 
+			//Claw Motion
+			if (vexRT[Btn6U] == 1)
+			{
+				motor[clawM] = up;
+			}
+			else if (vexRT[Btn6D] ==1)
+			{
+				motor[clawM] = dw;
+			}
+			else
+			{
+				motor[clawM] = non;
+			}
+
+
+			//Main Arm
+			if(SensorValue(mainswitch) == 1)
+			{
+				motor[mainarmM] = dw;
+				delay(500);
+				motor[mainarmM] = non;
+			}
+			else{
+				if (vexRT[Btn8U] == 1)
+				{
+					motor[mainarmM] = up;
+				}
+				else if (vexRT[Btn8D] ==1)
+				{
+					motor[mainarmM] = dw;
+				}
+				else
+				{
+					motor[mainarmM] = non;
+				}
+			}
+
+
+			// Wrist Motion
+			if (vexRT[Btn8R] == 1)
+			{
+				motor[wristM] = up;
+			}
+			else if (vexRT[Btn8L] == 1)
+			{
+				motor[wristM] = dw;
+			}
+			else
+			{
+				motor[wristM] = non;
+			}
+
+			// Gripper Motion
+			if (vexRT[Btn5D] == 1)
+			{
+				motor[gripperM] = up;
+			}
+			else if (vexRT[Btn5U] ==1)
+			{
+				motor[gripperM] = dw;
+			}
+			else
+			{
+				motor[gripperM] = non;
+			}
+
+
+
+			// Super Spin
+			if (vexRT[Btn7L] == 1)
+			{
+				motor[rightMotor] = up;
+				motor[leftMotor] = dw;
+
+				delay(1100);
+			}
+			else if(vexRT[Btn7R] == 1)
+			{
+				motor[leftMotor] = up;
+				motor[rightMotor] = dw;
+				delay(1100);
+			}
+			else
+			{
+				motor[rightMotor] = non;
+				motor[leftMotor] = non;
+			}
+
+		}
+		// Emergency button auto motor down
+		motor[leftMotor]  = 0;
+		motor[rightMotor] = 0;
+		motor[gripperM]  = 0;
+		motor[mainarmM] = 0;
+		motor[clawM]  = 0;
+	}
+}
