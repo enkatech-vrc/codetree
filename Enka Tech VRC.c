@@ -1,3 +1,6 @@
+#pragma config(Sensor, in4,    lineFollowerLEFT, sensorLineFollower)
+#pragma config(Sensor, in5,    lineFollowerCENTER, sensorLineFollower)
+#pragma config(Sensor, in6,    lineFollowerRIGHT, sensorLineFollower)
 #pragma config(Sensor, dgtl1,  mainswitch,     sensorTouch)
 #pragma config(Sensor, dgtl4,  range,          sensorSONAR_cm)
 #pragma config(Sensor, dgtl11, but1,           sensorTouch)
@@ -70,7 +73,7 @@ task autonomous()
 task usercontrol()
 {
 	while(true){
-		
+
 	//Ultrasonic Sensor for autonomous
 		while(SensorValue(range)> 50 )
 		{
@@ -79,7 +82,7 @@ task usercontrol()
 		}
 		while (state == 1)
 		{
-			
+
 		//Emergency button state
 			if(SensorValue(but1) == 1)
 			{
@@ -178,11 +181,44 @@ task usercontrol()
 			}
 
 		}
+
+while(vexRT(Btn7D) == 1)
+{
+  wait1Msec(2000);          // The program waits for 2000 milliseconds before continuing.
+
+  int threshold = 505;      /* found by taking a reading on both DARK and LIGHT    */
+                            /* surfaces, adding them together, then dividing by 2. */
+  while(true)
+  {
+
+
+    // RIGHT sensor sees dark:
+    if(SensorValue(lineFollowerRIGHT) > threshold)
+    {
+      // counter-steer right:
+      motor[leftMotor]  = 30;
+      motor[rightMotor] = -30;
+    }
+    // CENTER sensor sees dark:
+    if(SensorValue(lineFollowerCENTER) > threshold)
+    {
+      // go straight
+      motor[leftMotor]  = 30;
+      motor[rightMotor] = 30;
+    }
+    // LEFT sensor sees dark:
+    if(SensorValue(lineFollowerLEFT) > threshold)
+    {
+      // counter-steer left:
+      motor[leftMotor]  = -30;
+      motor[rightMotor] = 30;
+    }
+  }
+}
 		// Emergency button auto motor down
 		motor[leftMotor]  = 0;
 		motor[rightMotor] = 0;
 		motor[gripperM]  = 0;
 		motor[mainarmM] = 0;
 		motor[clawM]  = 0;
-	}
-}
+}}
