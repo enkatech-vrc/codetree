@@ -58,24 +58,18 @@ void pre_auton()
 
 task autonomous()
 {
-	motor[clawM] = up;
-	motor[mainarmM]= up;
-	delay(500);
-	motor[mainarmM] = 30;
-	motor[rightMotor] = dw;
-	motor[leftMotor] = dw;
+	motor[leftMotor]  = up;
+	motor[rightMotor] = up;
 	motor[mobileM] = dw;
-	delay(500);
+	delay(50);
 	motor[mobileM] = non;
-	delay(2000);
-	motor[mobileM] = up;
-	delay(500);
-	motor[mainarmM]= non;
+	delay(3000);
+	motor[leftMotor]  = non;
 	motor[rightMotor] = non;
-	motor[leftMotor] = non;
-	motor[clawM] = dw;
-	delay(500);
-	motor[clawM] = non;
+	motor[mobileM] = up;
+	delay(50);
+	motor[mobileM] = non;
+	
 
 	AutonomousCodePlaceholderForTesting();
 }
@@ -86,8 +80,8 @@ task usercontrol()
 
 	while(true){
 
-		motor[leftMotor]  = -(vexRT[Ch2]);
-		motor[rightMotor] = -(vexRT[Ch3]);
+		motor[leftMotor]  = -(vexRT[Ch3]);
+		motor[rightMotor] = -(vexRT[Ch2]);
 
 		//Claw Motion
 		if (vexRT[Btn6U] == 1)
@@ -138,18 +132,18 @@ task usercontrol()
 		}
 
 
-		//Wrist Otomation 
+		//Wrist Otomation
 
 		if(vexRT[Btn7R] == 1){
 			yon = !yon;
 			if(yon == true){
 				motor[wristM] = up;
-				delay(500);
+				delay(1000);
 				motor[wristM] = non;
 			}
 			if(yon == false){
 				motor[wristM] = dw;
-				delay(500);
+				delay(1000);
 				motor[wristM] = non;
 			}
 		}
